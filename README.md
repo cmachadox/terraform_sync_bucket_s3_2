@@ -27,3 +27,67 @@ S3 como já sabemos é o armazenamento baseado em objeto, altamente escalável e
 ## Caso de uso
 Copiar novos arquivos para um local diferente (intervalo / caminho) enquanto preserva a hierarquia. Usaremos o terraform
 
+
+## Como funciona:
+
+**Buckets:** criado e configurado no arquivo ***s3.tf***
+
+**O bucket:** ***bucket-destino***
+
+Nesse bucket serão armazenados os arquivos criados/updado para dentro do **bucket-recebimento**. 
+
+**O bucket:** ***bucket-recebimento***
+
+Esse bucket recebe a copia te tudo que for criado em **bucket-destino**
+
+**Função Lambada:** - criado e configurado no arquivo ***lambda.tf***
+
+**Função:** _s3_sync_lambda_ 
+
+Nessa função contem um script python qual tem como objetivo copiar tudo o que for feito uploud e tudo o que for criado dentro do bucket **bucket-recebimento** e copiar para o bucket qual mensionamos no script lá na váriavel **destination_bucket_name =**
+
+**O script_python: s3_sync_py**
+
+Esse script só deve ser alterado caso haja alteração no nome do bucket de destino, após alterar deve ser zipado ```# zip s3_sync.zip s3_sync.py```
+
+```
+import json
+import boto3
+
+# boto3 S3 initialization
+s3_client = boto3.client("s3")
+
+
+def lambda_handler(event, context):
+   destination_bucket_name = 'bucket-destino'
+
+   # event contains all information about uploaded object
+   print("Event :", event)
+
+   # Bucket Name where file was uploaded
+   source_bucket_name = event['Records'][0]['s3']['bucket']['name']
+
+   # Filename of object (with path)
+   file_key_name = event['Records'][0]['s3']['object']['key']
+
+   # Copy Source Object
+   copy_source_object = {'Bucket': source_bucket_name, 'Key': file_key_name }
+
+   # Caso queira usar sem diretorio descomemtemte a linha abaixo;
+   #s3_client.copy_object(CopySource=copy_source_object, Bucket=destination_bucket_name, Key=file_key_name)
+   
+   # Caso queria usar com diretorio descomente a linha abaixo 
+   s3_client.copy_object(CopySource=copy_source_object, Bucket=destination_bucket_name, Key='Arquivos/' + file_key_name)
+
+   return {
+       'statusCode': 200,
+       'body': json.dumps('Hello from S3 events Lambda!')
+   }
+
+```
+
+**Gatilho:** _S3_
+
+Esse gatilho criado na função lambda é o grande responsável por acionar o script python sempre que algo é upado/criado no bucket-recebimento
+
+
