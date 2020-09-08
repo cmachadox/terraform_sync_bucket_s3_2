@@ -1,0 +1,2 @@
+Site qual tireo o script
+https://www.powerupcloud.com/copying-objects-using-aws-lambda-based-on-s3-events-part-1/
