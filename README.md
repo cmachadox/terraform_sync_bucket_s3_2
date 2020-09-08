@@ -91,3 +91,76 @@ def lambda_handler(event, context):
 Esse gatilho criado na função lambda é o grande responsável por acionar o script python sempre que algo é upado/criado no bucket-recebimento
 
 
+![](https://gitlab.com/mandic-labs/teams/team-42/anbima/terraform/project_s3/-/raw/master/terraform.png)
+
+## Por dentro de cada arquivo .tf do projeto
+
+```
+A ideia não é explicar cada recursos contido nos arquivos, mais sim mostrar o que cada um é responsável em provissionar
+```
+
+**main.tf**
+
+Esse cara é o reponsável por conter as informações do provider, profile e região qual irá ser provisionada a função lambda
+
+**variables.tf**
+
+Esse é reponsável por conter as variaveis de quase tudo o projeto, por tanto é sempre bom não alterar nada sem antes consultar esse arquivo.
+
+**s3.tf**
+
+È reponsável por provissionar os buckets
+
+**iam_s3_policy.tf**
+
+È responsável por criar um role e uma policy, qual permite que a função lambda tenha permições de realizar a copia de um bucket para o outro.
+
+**lambda.tf**
+
+È responsável pelo provissionamento da função lambda, integrando o script em python e criando o gatilho resonsável pela execução do mesmo.
+
+**iam_user_group.tf**
+
+È responsável por provissionar 3 usuários e 3 grupos
+
+**usuários**
+
+* app.a
+* app.a
+* app.c
+
+**grupos**
+
+* group.a
+* group.a
+* group.c
+
+
+**iam_group_policy.tf**
+
+È responsável por provissionar 3 polices uma para cada grupo dando permissões diferentes a cada um conforme a sia necessidade.
+E feito tambem um attachment dos usuários cada um ao seu grupo de acordo com o bucket, ou conforme a sua necessidade
+
+* **group_a**  - grupo para realizar tarefas no bucket ***bucket-recebimento***
+
+- [x] Leitura/Listagem
+- [x] Gravação
+- [ ] Download
+
+* **group_b** - grupo para realizar tarefas no bucket ***bucket-destino***
+
+- [x] Leitura/Listagem
+- [x] Gravação 
+- [ ] Download
+
+* **group_c** - grupo para realizar tarefas no bucket ***bucket-destino***
+
+- [x] Leitura/Listagem
+- [ ] Gravação
+- [x] Download
+
+* **group_admin** - grupo para realizar tarefas full nos 2 bucket, podem add usuário ao grupo direto via painel do IAM
+
+
+
+
