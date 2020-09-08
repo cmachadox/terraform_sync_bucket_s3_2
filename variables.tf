@@ -6,7 +6,7 @@ variable "aws_region" {
 
 variable "aws_profile" {
   description = "Profil da conta"
-  default = "team-42"
+  default = "profile-aws"
   type        = string
 }
 
