@@ -2,7 +2,9 @@
 
 https://www.powerupcloud.com/copying-objects-using-aws-lambda-based-on-s3-events-part-1/
 
-***Quero deixar meu agradecimento pelo contéudo disponível, o que fiz foi automatizar a tarefa usando o terraform***
+***Quero deixar meu agradecimento pelo contéudo disponível.***
+
+***O que fiz foi automatizar a tarefa usando o terraform***
 
 
 
